@@ -19,13 +19,13 @@ MSG
 
 function template()
 {
-    mkdir -p config
+    mkdir -p config/nginx
     mustache dockstore_launcher_config/compose.config templates/Dockerfile_ui2.template > config/Dockerfile_ui2
     mustache dockstore_launcher_config/compose.config templates/robots.txt.template > config/robots.txt
     mustache dockstore_launcher_config/compose.config templates/web.yml.template > config/web.yml
-    mustache dockstore_launcher_config/compose.config templates/default.nginx_http.conf.template > config/default.nginx_http.conf
-    mustache dockstore_launcher_config/compose.config templates/default.nginx_http.shared.conf.template > config/default.nginx_http.shared.conf
-    mustache dockstore_launcher_config/compose.config templates/default.nginx_http.security.conf.template > config/default.nginx_http.security.conf
+    mustache dockstore_launcher_config/compose.config templates/default.nginx_http.conf.template > config/nginx/default.nginx_http.conf
+    mustache dockstore_launcher_config/compose.config templates/default.nginx_http.shared.conf.template > config/nginx/default.nginx_http.shared.conf
+    mustache dockstore_launcher_config/compose.config templates/default.nginx_http.security.conf.template > config/nginx/default.nginx_http.security.conf
 
     mustache dockstore_launcher_config/compose.config templates/init_webservice.sh.template > config/init_webservice.sh
     mustache dockstore_launcher_config/compose.config templates/init_migration.sh.template > config/init_migration.sh
@@ -65,12 +65,5 @@ fi
 template
 
 download_galaxy "$*"
-
-# We need to set the environment variable for the image digest
-source .env
-DOCKSTORE_IMAGE_DIGEST=$(scripts/webservice-image-digest.py $DOCKSTORE_VERSION)
-echo "DOCKSTORE_IMAGE_DIGEST=$DOCKSTORE_IMAGE_DIGEST" >> .env
-
-docker-compose build
 
 echo "Exiting now."
