@@ -26,7 +26,7 @@ access_log  off;
 resolver 127.0.0.11 valid=10s;
 
 server {
-    set $webservice "webservice";
+    set $webservice "localhost";
     server_name  .{{ DOMAIN_NAME }};
     include /etc/nginx/conf.d/default.nginx_http.shared.conf;
     include /etc/nginx/conf.d/default.nginx_http.security.conf;
@@ -65,22 +65,22 @@ server {
 
     # used when port 8443 was unreachable from google
     location = /sitemap.txt {
-        proxy_pass     http://$webservice:8080/metadata/sitemap;
+        proxy_pass     http://localhost:8080/metadata/sitemap;
     }
 
     location = /rss.xml {
-        proxy_pass     http://$webservice:8080/metadata/rss;
+        proxy_pass     http://localhost:8080/metadata/rss;
     }
 
     location /static {
-        proxy_pass     http://$webservice:8080/static;
+        proxy_pass     http://localhost:8080/static;
     }
 
     location /api/ {
         rewrite ^ $request_uri;
         rewrite ^/api/(.*) $1 break;
         return 400;
-        proxy_pass     http://$webservice:8080/$uri;
+        proxy_pass     http://localhost:8080/$uri;
     }
 
     location /robots.txt {
@@ -102,7 +102,7 @@ server {
 
 # Server block for access via IP instead of domain
 server {
-    set $webservice "webservice";
+    set $webservice "localhost";
     access_log  /var/log/nginx/access.log  custom;
     listen 4200 default_server;
 
@@ -111,6 +111,6 @@ server {
     }
     location / {
         # Send all ELB health checks to this endpoint
-        proxy_pass     http://$webservice:8080/metadata/sourceControlList;
+        proxy_pass     http://localhost:8080/metadata/sourceControlList;
     }
 }
