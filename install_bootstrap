@@ -20,15 +20,16 @@ MSG
 function template()
 {
     mkdir -p config/nginx
+    mkdir -p config/webservice
     mustache dockstore_launcher_config/compose.config templates/Dockerfile_ui2.template > config/Dockerfile_ui2
-    mustache dockstore_launcher_config/compose.config templates/robots.txt.template > config/robots.txt
-    mustache dockstore_launcher_config/compose.config templates/web.yml.template > config/web.yml
+    mustache dockstore_launcher_config/compose.config templates/robots.txt.template > config/nginx/robots.txt
+    mustache dockstore_launcher_config/compose.config templates/web.yml.template > config/webservice/web.yml
     mustache dockstore_launcher_config/compose.config templates/default.nginx_http.conf.template > config/nginx/default.nginx_http.conf
     mustache dockstore_launcher_config/compose.config templates/default.nginx_http.shared.conf.template > config/nginx/default.nginx_http.shared.conf
     mustache dockstore_launcher_config/compose.config templates/default.nginx_http.security.conf.template > config/nginx/default.nginx_http.security.conf
 
-    mustache dockstore_launcher_config/compose.config templates/init_webservice.sh.template > config/init_webservice.sh
-    mustache dockstore_launcher_config/compose.config templates/init_migration.sh.template > config/init_migration.sh
+    mustache dockstore_launcher_config/compose.config templates/init_webservice.sh.template > config/webservice/init_webservice.sh
+    mustache dockstore_launcher_config/compose.config templates/init_migration.sh.template > config/webservice/init_migration.sh
     mustache dockstore_launcher_config/compose.config templates/elasticsearch.yml > config/elasticsearch.yml
     mustache dockstore_launcher_config/compose.config templates/metricbeat.yml > config/metricbeat.yml
     mustache dockstore_launcher_config/compose.config templates/essnapshot_backup.sh > scripts/essnapshot_backup.sh
