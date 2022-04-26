@@ -19,14 +19,15 @@ MSG
 
 function template()
 {
-    mkdir -p config/nginx
+    mkdir -p config/nginx-conf
+    mkdir -p config/nginx-html2
     mkdir -p config/webservice
     mustache dockstore_launcher_config/compose.config templates/Dockerfile_ui2.template > config/Dockerfile_ui2
-    mustache dockstore_launcher_config/compose.config templates/robots.txt.template > config/nginx/robots.txt
     mustache dockstore_launcher_config/compose.config templates/web.yml.template > config/webservice/web.yml
-    mustache dockstore_launcher_config/compose.config templates/default.nginx_http.conf.template > config/nginx/default.nginx_http.conf
-    mustache dockstore_launcher_config/compose.config templates/default.nginx_http.shared.conf.template > config/nginx/default.nginx_http.shared.conf
-    mustache dockstore_launcher_config/compose.config templates/default.nginx_http.security.conf.template > config/nginx/default.nginx_http.security.conf
+    mustache dockstore_launcher_config/compose.config templates/default.nginx_http.conf.template > config/nginx-conf/default.nginx_http.conf
+    mustache dockstore_launcher_config/compose.config templates/default.nginx_http.shared.conf.template > config/nginx-conf/default.nginx_http.shared.conf
+    mustache dockstore_launcher_config/compose.config templates/default.nginx_http.security.conf.template > config/nginx-conf/default.nginx_http.security.conf
+    mustache dockstore_launcher_config/compose.config templates/robots.txt.template > config/nginx-html2/robots.txt
 
     mustache dockstore_launcher_config/compose.config templates/init_webservice.sh.template > config/webservice/init_webservice.sh
     mustache dockstore_launcher_config/compose.config templates/init_migration.sh.template > config/webservice/init_migration.sh
@@ -64,6 +65,9 @@ if [ -f dockstore_launcher_config/compose.config ] ; then
 fi
 
 template
+
+wget -qO config/nginx-html2/index.html https://gui.dockstore.org/${UI2_HASH}/index.html
+wget -qO config/nginx-html2/manifest.json https://gui.dockstore.org/${UI2_HASH}/manifest.json
 
 download_galaxy "$*"
 
